@@ -8,6 +8,7 @@
    pip install -r requirements.txt
 
 3. Запустите скрипт с нужными параметрами:
+
    python3 main.py --file <путь_к_csv> [--where "колонка=значение"] [--aggregate "агрегатор:колонка"]
 
 Примеры:
