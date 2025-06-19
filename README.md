@@ -12,13 +12,13 @@
 
 5. Запустите скрипт с нужными параметрами:
 
-   python3 main.py --file <путь_к_csv> [--where "колонка=значение"] [--aggregate "агрегатор:колонка"]
+   python3 main.py --file <путь_к_csv> [--where "колонка=значение"] [--aggregate "агрегатор=колонка"]
 
 Примеры:
    
    python3 main.py --file products.csv --where "brand=apple"
    
-   python3 main.py --file products.csv --aggregate "avg:price"
+   python3 main.py --file products.csv --aggregate "avg=price"
 
 Инструкция к запуску через Docker:
 
@@ -28,7 +28,7 @@
 
 3. Запустите контейнер с вашим файлом:
 
-   docker run python3 main.py --file <путь_к_csv> [--where "колонка=значение"] [--aggregate "агрегатор:колонка"]
+   docker run python3 main.py --file <путь_к_csv> [--where "колонка=значение"] [--aggregate "агрегатор=колонка"]
 
 Инструкция к запуску тестов:
 
@@ -45,13 +45,10 @@
    'имя_агрегатора': функция,
    Например, чтобы добавить медиану:
 
-   import statistics
-   AGGREGATIONS['median'] = statistics.median
-
 4. Теперь можно использовать новый агрегатор в параметре --aggregate, например:
 
-   python3 main.py --file products.csv --aggregate "median:price"
+   python3 main.py --file products.csv --aggregate "median=price"
 
 Пример использования:
-![image](https://github.com/user-attachments/assets/97d284cf-d71c-445d-aee8-b47e1ebd2a5a)
 
+![image](https://github.com/user-attachments/assets/0f66bd4b-da15-46b2-96ae-2790ba6efd69)
