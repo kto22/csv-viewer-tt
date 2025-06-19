@@ -51,3 +51,7 @@
 4. Теперь можно использовать новый агрегатор в параметре --aggregate, например:
 
    python3 main.py --file products.csv --aggregate "median:price"
+
+Пример использования:
+![image](https://github.com/user-attachments/assets/97d284cf-d71c-445d-aee8-b47e1ebd2a5a)
+
