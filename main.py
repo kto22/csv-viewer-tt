@@ -16,7 +16,7 @@ def parse_args() -> argparse.Namespace:    # тут парсим аргумен�
     parser = argparse.ArgumentParser(description='Обработка CSV: фильтрация и агрегация')
     parser.add_argument('--file', required=True, help='Путь к CSV-файлу')
     parser.add_argument('--where', help='Условие фильтрации, например: "price>1000" или "brand=apple"')
-    parser.add_argument('--aggregate', help='Агрегация, например: "avg:price", "min:rating", "max:price"')
+    parser.add_argument('--aggregate', help='Агрегация, например: "avg=price", "min=rating", "max=price"')
     args = parser.parse_args()
     if args.where and args.aggregate:
         parser.error('Нельзя использовать --where и --aggregate одновременно.')
@@ -86,10 +86,10 @@ def filter_rows(rows: list[dict], where: str | None) -> list[dict]:    # тут 
 def aggregate_rows(rows: list[dict], aggregate: str | None):    # здесь применяем функцию агрегации
     if not aggregate:
         return None
-    if ':' not in aggregate:
-        print(f'Некорректный формат агрегации. Используйте avg:column, min:column и т.д.')
+    if '=' not in aggregate:
+        print(f'Некорректный формат агрегации. Используйте avg=column, min=column и т.д.')
         sys.exit(1)
-    func, col = aggregate.split(':', 1)
+    func, col = aggregate.split('=', 1)
     func = func.strip()
     col = col.strip()
     if func not in AGGREGATIONS:
