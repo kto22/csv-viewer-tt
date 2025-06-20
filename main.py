@@ -13,10 +13,11 @@ AGGREGATIONS = {    # это список агрегаторов (последн
 }
 
 def parse_args() -> argparse.Namespace:    # тут парсим аргументы с введённой команды   
-    parser = argparse.ArgumentParser(description='Обработка CSV: фильтрация и агрегация')
+    parser = argparse.ArgumentParser(description='Обработка CSV: фильтрация, агрегация, сортировка')
     parser.add_argument('--file', required=True, help='Путь к CSV-файлу')
     parser.add_argument('--where', help='Условие фильтрации, например: "price>1000" или "brand=apple"')
     parser.add_argument('--aggregate', help='Агрегация, например: "avg=price", "min=rating", "max=price"')
+    parser.add_argument('--order-by', help='Сортировка, например: "price=desc" или "brand=asc"')
     args = parser.parse_args()
     if args.where and args.aggregate:
         parser.error('Нельзя использовать --where и --aggregate одновременно.')
@@ -83,6 +84,29 @@ def filter_rows(rows: list[dict], where: str | None) -> list[dict]:    # тут 
     return filtered
 
 
+def order_rows(rows: list[dict], order_by: str | None) -> list[dict]:
+    if not order_by:
+        return rows
+    if '=' in order_by:
+        col, direction = order_by.split('=', 1)
+        col = col.strip()
+        direction = direction.strip().lower()
+    else:
+        col = order_by.strip()
+        direction = 'asc'
+    if col not in rows[0]:
+        print(f'Колонка "{col}" не найдена в файле.')
+        sys.exit(1)
+    reverse = direction == 'desc'
+    def sort_key(row):
+        v = row.get(col, '')
+        try:
+            return float(v)
+        except ValueError:
+            return v
+    return sorted(rows, key=sort_key, reverse=reverse)
+
+
 def aggregate_rows(rows: list[dict], aggregate: str | None):    # здесь применяем функцию агрегации
     if not aggregate:
         return None
@@ -127,11 +151,12 @@ def print_aggregate(result) -> None:    # тут выводим данные п�
 def main() -> None:
     args = parse_args()
     rows = read_csv(args.file)
+    rows = filter_rows(rows, args.where)
+    rows = order_rows(rows, args.order_by)
     if args.aggregate:
         result = aggregate_rows(rows, args.aggregate)
         print_aggregate(result)
     else:
-        rows = filter_rows(rows, args.where)
         print_table(rows)
 
 if __name__ == '__main__':
